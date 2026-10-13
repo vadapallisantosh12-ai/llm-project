@@ -35,9 +35,30 @@ export const apiClient = {
   },
 
   async getProjects(): Promise<Project[]> {
-    const res = await fetch(`${API_BASE}/projects`);
-    return handleResponse<Project[]>(res);
-  },
+  const res = await fetch(`${API_BASE}/projects`);
+  const result = await handleResponse<unknown>(res);
+
+  // Standard API response: an array of projects
+  if (Array.isArray(result)) {
+    return result as Project[];
+  }
+
+  // Support APIs that wrap the array in an object
+  if (result && typeof result === 'object') {
+    const data = result as Record<string, unknown>;
+
+    if (Array.isArray(data.data)) {
+      return data.data as Project[];
+    }
+
+    if (Array.isArray(data.projects)) {
+      return data.projects as Project[];
+    }
+  }
+
+  console.error('Unexpected projects API response:', result);
+  return [];
+},
 
   async createProject(payload: ProjectCreatePayload): Promise<Project> {
     const res = await fetch(`${API_BASE}/projects`, {
