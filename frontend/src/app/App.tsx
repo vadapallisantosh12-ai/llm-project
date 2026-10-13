@@ -43,7 +43,7 @@ export const App: React.FC = () => {
       } else {
         setHealth(null);
       }
-      setProjects(projectsRes);
+      setProjects(Array.isArray(projectsRes) ? projectsRes : []);
     } catch (err: unknown) {
       setError((err as Error).message || 'Failed to connect to DevAgent AI backend');
     } finally {
