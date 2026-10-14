@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/api/v1/1;path*",
+      "source": "/api/v1/:path*",
       "destination": "https://llm-project-v002.onrender.com/api/v1/:path*"
     }
   ]
