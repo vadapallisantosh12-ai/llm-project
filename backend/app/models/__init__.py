@@ -1,7 +1,3 @@
-"""Database models package."""
+from backend.app.models.entities import Project, Bug, Patch, TestCase, Setting
 
-from backend.app.models.audit import AuditLog
-from backend.app.models.base import TimestampMixin
-from backend.app.models.project import Project
-
-__all__ = ["TimestampMixin", "Project", "AuditLog"]
+__all__ = ["Project", "Bug", "Patch", "TestCase", "Setting"]

@@ -1,39 +1,38 @@
-"""Health and operational diagnostic endpoint."""
-
 import platform
 import sys
-
-from fastapi import APIRouter, status
-
+from datetime import datetime, timezone
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy import text
 from backend.app.core.config import settings
-from backend.app.db.session import check_db_connection
-from backend.app.schemas.health import HealthData, HealthResponse
+from backend.app.db.session import get_db
+from backend.app.schemas.api import HealthResponse, HealthData, HealthSystemInfo
 
-router = APIRouter(prefix="/health", tags=["Health"])
+router = APIRouter(tags=["health"])
 
 
-@router.get("", response_model=HealthResponse, status_code=status.HTTP_200_OK)
-def get_health() -> HealthResponse:
-    """Return live application health status, database connectivity, and environment metadata."""
-    db_connected = check_db_connection()
-    db_status = "connected" if db_connected else "disconnected"
-    overall_status = "healthy" if db_connected else "degraded"
-
-    data = HealthData(
-        status=overall_status,
-        app_name=settings.APP_NAME,
-        version=settings.APP_VERSION,
-        environment=settings.ENVIRONMENT,
-        database=db_status,
-        active_llm_provider=settings.DEFAULT_LLM_PROVIDER,
-        system_info={
-            "platform": platform.platform(),
-            "python_version": sys.version.split()[0],
-            "os": platform.system(),
-        },
-    )
+@router.get("/health", response_model=HealthResponse)
+def get_health(db: Session = Depends(get_db)):
+    db_status = "connected"
+    try:
+        db.execute(text("SELECT 1"))
+    except Exception:
+        db_status = "degraded"
 
     return HealthResponse(
-        status=overall_status,
-        data=data,
+        status="healthy" if db_status == "connected" else "degraded",
+        data=HealthData(
+            status="healthy" if db_status == "connected" else "degraded",
+            app_name=settings.APP_NAME,
+            version=settings.VERSION,
+            environment=settings.ENVIRONMENT,
+            database=db_status,
+            active_llm_provider=settings.DEFAULT_LLM_PROVIDER,
+            system_info=HealthSystemInfo(
+                platform=platform.platform(),
+                python_version=sys.version.split()[0],
+                os=platform.system(),
+            ),
+            timestamp=datetime.now(timezone.utc).isoformat(),
+        ),
     )

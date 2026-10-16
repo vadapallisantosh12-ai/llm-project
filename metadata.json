@@ -1,0 +1,11 @@
+{
+  "name": "DevAgent AI",
+  "description": "Intelligent Software Engineering Platform with codebase comprehension, project management, and safe verification",
+  "version": "0.1.0",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

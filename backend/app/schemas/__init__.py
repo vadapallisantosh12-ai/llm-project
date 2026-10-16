@@ -1,15 +1,29 @@
-"""API Schemas package."""
-
-from backend.app.schemas.common import ErrorDetail, ErrorResponse, SuccessResponse
-from backend.app.schemas.health import HealthData, HealthResponse
-from backend.app.schemas.project import ProjectCreateRequest, ProjectResponse
+from backend.app.schemas.api import (
+    ProjectCreatePayload,
+    ProjectResponse,
+    BugResponse,
+    PatchResponse,
+    TestCaseResponse,
+    AppSettingsSchema,
+    HealthResponse,
+    StatisticsResponse,
+    ChatRequest,
+    ChatResponse,
+    DebugRequest,
+    DebugResponse,
+)
 
 __all__ = [
-    "ErrorDetail",
-    "ErrorResponse",
-    "SuccessResponse",
-    "HealthData",
-    "HealthResponse",
-    "ProjectCreateRequest",
+    "ProjectCreatePayload",
     "ProjectResponse",
+    "BugResponse",
+    "PatchResponse",
+    "TestCaseResponse",
+    "AppSettingsSchema",
+    "HealthResponse",
+    "StatisticsResponse",
+    "ChatRequest",
+    "ChatResponse",
+    "DebugRequest",
+    "DebugResponse",
 ]
